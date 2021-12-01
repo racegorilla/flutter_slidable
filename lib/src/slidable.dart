@@ -28,6 +28,7 @@ class Slidable extends StatefulWidget {
     this.direction = Axis.horizontal,
     this.dragStartBehavior = DragStartBehavior.down,
     this.useTextDirection = true,
+    this.preOpenedActionPane = ActionPaneType.none,
     required this.child,
   });
 
@@ -105,6 +106,8 @@ class Slidable extends StatefulWidget {
   /// {@macro flutter.widgets.ProxyWidget.child}
   final Widget child;
 
+  final ActionPaneType preOpenedActionPane;
+
   @override
   _SlidableState createState() => _SlidableState();
 
@@ -131,6 +134,7 @@ class _SlidableState extends State<Slidable>
   late final SlidableController controller;
   late Animation<Offset> moveAnimation;
   late bool keepPanesOrder;
+  ActionPaneType preOpenedActionPane = ActionPaneType.none;
 
   @override
   bool get wantKeepAlive => !widget.closeOnScroll;
@@ -183,6 +187,16 @@ class _SlidableState extends State<Slidable>
     controller
       ..enableEndActionPane = endActionPane != null
       ..endActionPaneExtentRatio = endActionPane?.extentRatio ?? 0;
+
+    if (widget.preOpenedActionPane != preOpenedActionPane) {
+      preOpenedActionPane = widget.preOpenedActionPane;
+      if (preOpenedActionPane == ActionPaneType.end && endActionPane != null) {
+        controller.ratio = -controller.endActionPaneExtentRatio;
+      } else if (preOpenedActionPane == ActionPaneType.start &&
+          startActionPane != null) {
+        controller.ratio = controller.startActionPaneExtentRatio;
+      }
+    }
   }
 
   void updateIsLeftToRight() {
