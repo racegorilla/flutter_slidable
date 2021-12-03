@@ -106,6 +106,9 @@ class Slidable extends StatefulWidget {
   /// {@macro flutter.widgets.ProxyWidget.child}
   final Widget child;
 
+  /// Determines the ActionPane that will be opened at the widget's build without animation.
+  ///
+  /// By default, the action pane is [ActionPaneType.none]
   final ActionPaneType preOpenedActionPane;
 
   @override
